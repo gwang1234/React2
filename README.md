@@ -33,7 +33,7 @@ export default async function Foo() {
 - 컴포넌트에서 **HTML 메타데이터를 처리하는 방법**
 - **_aoo.js와 _documents.js 파일 내용 및 커스터마이징 방법**
 
-<br><br>
+<br><br> 
 
 ### 라우팅 시스템
 <br>

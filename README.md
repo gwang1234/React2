@@ -2,6 +2,85 @@
 
 <br><br>
 
+## 10월 2일
+
+<br>
+
+### Page Router
+
+```.jsx
+export default function index() {
+  return (
+    <>
+      <h1>bar/woo/index page</h1>
+      <h1>localhost:3000/bar/woo</h1>
+    </>
+  );
+}
+
+export default function index() {
+  return (
+    <>
+      <h1>bar/index page</h1>
+      <h1>localhost:3000/bar</h1>
+    </>
+  );
+}
+```
+
+```.jsx
+
+export default function BraIndex() {
+  return (
+    <>
+      <h1>bar/woo/index page</h1>
+      <h1>localhost:3000/bar/foo</h1>
+    </>
+  );
+}
+```
+
+```.jsx
+export default function Foo() {
+  return (
+    <>
+      <h1>foo page</h1>
+    </>
+  );
+}
+```
+
+```.jsx
+export default function Blog(props) {
+  console.log(props);
+  return (
+    <>
+      <h1>Blog page</h1>
+      <h1>blog: {props.param.Blog}</h1>
+      <h1>blog: {props.searchParams.id}</h1>
+      <h1>blog: {props.searchParams.name}</h1>
+    </>
+  );
+}
+```
+
+<br>
+
+### App Router
+
+```.jsx
+export default function fooId(){
+    return(
+        <h1>
+            
+        </h1>
+    )
+}
+```
+
+
+<br><br><br><br><br><br>
+
 ## 9월 25일
 <br>
 

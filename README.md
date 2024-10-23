@@ -2,6 +2,112 @@
 
 <br><br>
 
+## 10월 23일
+
+### Static Router
+
+- 정적 자원 중 이미지 파일은 `SEO`에 많은 영향을 미칩니다.
+- 다운로드 시간이 많이 걸리고, 렌더링 후에 레이아웃이 변경되는 등 UX에 많은 영향을 미칩니다
+- 이것을 `누적 레이아웃 이동`이라고 합니다
+- image 컴포넌트를 사용하면 CLS문제를 해결합니다
+- `lazy loading`: 이미지 로드 시점을 필요할 때까지 지연시키는게 기술입니다
+- 이미지 사이즈 최적화로 사이즈를 `1/10이하`로 줄여 줍니다
+
+### Image component - local
+- WebP와 같은 최신 이미지 포멧 및 최신 포멧을 지원하지 않는 브라우저를 위해 png fallback으로 제공
+- Image 컴포넌트를 사용하면 `다양한 prop`를 전달
+- 정적 자원은 기본적으로 `public 디렉토리`에 저장합니다.
+- 정적 자원은 번들링 이후에도 변하지 않기 때문입니다
+- 이미지를 불러오는 방법은 직접 불러오는 방법과 import하는 방법 2가지가 있습니다
+- `width`와 `height` 는 반드시 사용합니다
+  - import 하는 방법은 다음 소스처럼 이미지를 import한 후에 이름만 사용하면 됩니다
+
+```
+import Image from "next/image";
+import foo from "/public/img/forest.jpg"
+
+export default function About() {
+    return (
+        <>
+        <h1>About</h1>
+        <h1>About...</h1>
+        <Image src="/img/crow.jpg" alt="crow" width={300} height={200}/>
+        <Image src={foo} alt="crow" width={300} height={200}/>
+        </>
+    )
+}
+```
+### Image component - Remote
+- pixabay와 같은 외부 이미지를 사용하려면 `next.config.mjs`에 URL을 추가해 줘야함
+```
+images: {
+  remotePatterns: [
+    {
+      protocol: "https",
+      hostname: "cdn.pixabay.com",
+    },
+  ];
+}
+```
+- 직접 url 지정한 예시
+```
+export default function About() {
+    return (
+        <>
+        <h1>About</h1>
+        <h1>About...</h1>
+        <Image src="https://cdn.pixabay.com/photo/2023/07/02/19/58/chamomile-8102907_1280.jpg" alt="flower" width={300} height={200}/>
+        </>
+    )
+}
+```
+
+### Unhandled Runtime Error
+- Next.js나 React 앱에서 런타임에 처리되지 않은 오류가 발생했음을 나타냄
+- 오류 유형: 어떤 종류의 오류인지 (예: `TypeError`, `ReferenceError`, `SyntaxError` 등)
+![Forest](image.png)
+
+### 디렉토리 구조 구성
+- Next.js에서는 특정 파일과 디렉토리가 지정된 위치에 있어야 합니다
+  - _app.js나 _document.js파일, pages/와 public/
+- Node_modules/: Next.js 프로젝트의 의존성 패키지를 설치하는 디렉토리
+- pages/: 애플리케리션의 페이지 파일을 저장하고 라우팅 시스템 관리
+- public/: 컴파일된 CSS및 자바스크립트 파일, 이미지, 아이콘 등의 정적 자원 관리
+- styles/: 스타일링된 포멧(CSS, SASS, LESS 등)과 관계없이 스타일링 모듈 관리
+
+<br>
+
+- pages/ 디렉토리를 src/ 디렉토리 안으로 옯길 수 있습니다
+- public/과 node_modules/를 제외한 다른 디렉토리는 모두 src/로 옮길 수 있습니다
+
+### 유틸리티 구성
+- 컴포넌트를 만들지 않는 코드 파일을 유틸리티 스크립트라고 합니다
+
+### 정적 자원 구성
+- 정적 자원은 `public/` 디렉토리에서 관리합니다
+- 일반적인 웹 애플리케이션에서는 다음과 같은 정적 자원을 사용합니다
+  - 이미지 (PNG, JPG, SVG, WebP)
+  - CSS 파일
+  - JavaScript 파일
+  - 폰트 파일 (TTF, WOFF)
+  - 파비콘 및 기타 아이콘 파일
+
+### lib 파일 수정
+- lib 파일은 **서드파티 라이브러리를 감싸는 스크립트**를 말합니다
+- lib 파일은 **특정 라이브러리**에 특화된 것입니다
+- 만일 GragpQL을 사용한다면, 클라이언트를 초기화하고, 질의문과 뮤테이션을 지정하는 등의 작업이 필요합니다
+- 먼저 이런 스크립트를 좀 더 모듈화하기 위해 프로젝트 root에 lib/grapgql/ 디렉토리를 만틉니다
+
+### 데이터 불러오기
+- Next는 클라이언트와 서버 모두에게 데이터를 불러올 수 있습니다
+- 서버는 다음 두 가지 상황에서 데이터를 불러올 수 있습니다
+  - 1) 정적 페이지를 만들 때 getStaticProps 함수를 사용해서, 빌드 시점에 데이터를 불러올 수 있습니다
+  - 2) 서버가 페이지를 렌더링 할때 getServerSideProps를 통해, 실행 도중 데이터를 불러올 수도 있습니다
+
+
+
+<br><br><br><br><br><br>
+
 ## 10월 11일
 
 ### 감기 몸살로 수업을 못 들었습니다. 때문에 수업시간에 배운 내용을 정리하지 못했습니다...

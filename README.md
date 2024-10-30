@@ -2,6 +2,108 @@
 
 <br><br>
 
+## 10월 30일
+
+### 서버가 데이터 불러오기
+
+- 서버에서는 두 가지 방법으로 HTTP 요청을 만들고 처리할 수 있습니다
+  - 1) Node의 내장 `Http 라이브러리`를 사용할 수 있습니다. 다만 서드파티 Http 클라이언트와 비교했을 때 설정하고 처리해야 할 작업이 더 많은 편입니다
+  - 2) Http 클라이언트 라이브러리를 사용할 수 있습니다. 가장 유명한 것이 `Axios`입니다
+
+- Axios를 사용하는 이유는 서버와 클라이언트에 모두 적용할 수 있어서 입니다
+- Rest API를 호출할 때는 `public API`를 호출할 것인지, `private API`를 호출할 것인지를 먼저 확인해야 합니다
+
+### Rest API - 개요
+
+- REST란 자원을 이름으로 구분하여 그 자원의 상태를 통신을 통해 주고 받는 것을 의미합니다
+- 1. HTTP URL을 이용해서 자원을 명시합니다
+- 2. HTTP Method를 통해 자원에 CRUD를 적용합니다
+
+<br>
+
+- CURD란 데이터 처리의 기본적인 기능
+  - `Create`(생성)
+  - `Read`(읽기)
+  - `Update`(갱신)
+  - `Delete`(삭제)
+
+- REST API란 **REST의 규칙을 적용한 API**를 의미합니다.
+
+### REST API - 기본 설계 규칙
+
+- URI는 동사보다는 명사를, 대문자보다 소문자를 사용하려고 합니다
+- 주소의 마지막 슬래시를 포함하지 않습니다
+- 단어를 연결할 때는 하이픈을 사용합니다
+- 파일확장자는 URI에 포함하지 않습니다
+- URI에 메소드를 포함하지 않습니다
+
+### Json Server
+
+- Backend가 개발되기 전이나, 아직 외부 API가 결정되지 않았다면 local에 Json server를 구축하고 Frontend 개발을 하기에 적합한 node 패키지 입니다
+- 다음 명령어로 json-server를 설치해 줍니다
+```
+npm install i -g json-server
+```
+- json 파일을 만듭니다
+```
+{
+    "posts": [
+      { "id": 1, "title": "Hello World", "author": "John Doe" },
+      { "id": 2, "title": "Json Server is great!", "author": "Jane Doe" }
+    ]
+}
+```
+- 설치가 잘 되었는지 version을 확인해 봅니다
+```
+json-server --version
+```
+- 서버 실행
+```
+json-server --watch data.json --port 3001
+```
+
+### Axios란?
+
+- Next.js에서 REST API를 다룰 때는 보통 axios와 fetch 중 하나를 선택하는 경우가 많습니다
+
+[Axios]
+- 간편한 문법: 기본적으로 JSON 데이터를 자동으로 변환해주므로, res.data로 쉽게 접을할 수 있습니다
+
+[Fetch API]
+- 내장 API: 브라우저에 내장되어 있어 별도의 설치가 필요 없습니다
+- Promise 기반: 비동기 작업을 처리하는 데 익숙한 구조입니다
+- 스트림 처리: 데이터를 스트리밍으로 처리할 수 있는 기능이 있어, 큰 파일을 처리하는데 유용합니다
+
+[결론]
+- 복찹한 요청이나 에러 처리가 필요한 경우에는 axios가 더 적합할 수 있습니다
+
+### Axios 설치
+
+```
+npm install axios
+```
+
+### Axios 사용하기
+- axios.get()을 통해 받아온 응답 객체인 res는 단순히 JSON 데이터만 담고 있는 것이 아니라, HTTP 통신과 관련된 여러 정보들을 함꼐 포함하고 있습니다
+```
+import axios from 'axios';
+
+// 예시 요청
+axios.get('https://jsonplaceholder.typicode.com/posts')
+  .then(response => console.log(response.data))
+  .catch(error => console.error(error));
+```
+
+예를 들어
+- res.status: HTTP 응답 상태 코드(200, 404,500 등)
+
+- 그런데 위의 코드는 비동기 데이터 로딩과 상태 관리가 제대로 고려되지 않았기 때문에 몇가지 문제가 있을 수 있습니다
+- 특히, Next.js와 같은 리액트 기반 앱에서 비동기 데이터를 처리할 때 렌더링 주기에 맞게 상태를 관리해야 합니다
+
+
+
+<br><br><br><br><br><br>
+
 ## 10월 23일
 
 ### Static Router

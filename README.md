@@ -2,6 +2,110 @@
 
 <br><br>
 
+## 11월 6일
+
+### styled jsx
+- styled jsx는 css-in-js라이브러리 입니다. 내장 모듈이기 때문에 설치가 필요 없습니다
+- 즉, CSS 속성 지정을 위해 **자바스크립트를 사용할 수 있는** 라이브러리 입니다
+
+```
+'use client'
+export default function CssEx1() {
+    return (
+        <>
+          <h1>CssEx Component</h1>
+          <button className="button">버튼1</button>
+          <style jsx>{`
+            .button {
+                background: green;
+                color: white;
+            }
+          `}
+          </style>
+        </>
+    )
+}
+```
+
+### css-in-js 단점
+- IDE나 코드 편집기 등 개발 도구에 대한 지원이 부족합니다
+- 문법 하이라이팅, 자동 완성, 린트 기능을 제공하지 않습니다
+- 코드 내에서 **css에 대한 의존성이 점점 커지기 때문에** 앱 번들도 커지고 **느려 집니다**
+- 서버에 미리 css를 생성해도 클라이언트에서 리액트 하이드레이션이 끝나면 css를 다시 생성해야 합니다
+- 이 때문에 실행 시점에 부하가 커지며, 웹 앱이 계속 느려지게 됩니다. 기능을 추가 할 수록 이런 현상은 심해 집니다.
+
+### CSS Module
+- css-in-js의 단점을 회피하기 위한 좋은 방법은 바로 css Module입니다
+- pages/index.js를 다음과 같이 수정합니다
+```
+import styles from './page.module.css';
+
+export default function home() {
+  return (
+    <>
+    <h3 className={styles.main}>main</h3>
+    </>
+  )
+}
+```
+```
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6rem;
+  min-height: 100vh;
+}
+```
+- 클래스들은 컴포넌트 스코프를 가집니다
+- 생성된 HTML 페이지 소스를 보면 class 이름이 바뀌어 있는 것을 확인할 수 있습니다
+- Styled JSX때와 마찬가지로 이런 고유한 이름 때문에 다른 파일이라면 같은 class명을 사용해도 충돌이 일어나지 않습니다
+- 만일 전역 CSS을 선언하고 싶다면 styles/globals.css를 만들고 사용합니다
+- 파일명은 반드시 globals가 아니어도 되지만 암묵적 합의는 가능하면 지키는 것이 좋습니다
+- 이제 _app_js에 import 해주면 모든 컴포넌트에 적용됩니다
+- 또 한가지 방법은 class로 선언된 요소에 :global 키워드를 추가해 줍니다
+
+### SASS
+- Next에서 기본으로 지원하는 전 처리기 입니다
+- 단 패키지 설치가 필요합니다
+- SASS 및 SCSS 문법으로 CSS Module을 만들고 사용할 수 있습니다
+- styles/Home.module.css 파일 이름을 `styles/Home.module.scss`로 바꿔주면 됩니다
+- SASS 기본 설정을 변경해야 하는 경우 next.config.js 설정파일을 변경합니다
+
+[SASS 가이드](https://sass-lang.com/guide/)
+
+```
+import scss from '@/styles/foo.module.scss'
+
+export default function SassEx() {
+    return (
+        <>  
+        <div className={scss.foo}>
+            <h1>SassEx Page</h1>
+            <h2>in Button</h2>
+        </div>
+        <button>out Button</button>
+        </>
+    )
+}
+```
+```
+$foo: red;
+
+.bar {
+    color: $foo;
+}
+
+.foo {
+    h2 {
+        background-color: aqua;
+    }
+}
+```
+
+<br><br><br><br><br><br>
+
 ## 10월 30일
 
 ### 서버가 데이터 불러오기

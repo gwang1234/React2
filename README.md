@@ -2,6 +2,200 @@
 
 <br><br>
 
+## 11월 13일
+
+### UI 라이브러리
+- UI라이브러리, 프레임워크, 유틸리티 기능이 필수는 아닙니다
+- 다만 생산성 향상 및 UI의 일관성을 유지하는데 많은 도움을 받을 수 있습니다
+- 이번 장에서는 다음 **3가지 프레임워크**에 관해 간단히 알아봅시다
+- `Chakra UI`
+- `TailwindCSS`
+- `Headless UI`
+
+<hr>
+
+### CHakra UI
+- **오픈소스 컴포넌트 라이브러리**로, 모듈화 되어 있고 접근성이 뛰어나며 보기 좋은 UI를 만들 수 있습니다
+- 버튼, 모달, 입력 등 **다양한 내장 컴포넌트를 제공**합니다
+- dark mode 및 light mode를 모두 지원합니다
+- Chakra UI의 useColorMode 훅을 사용해서 현재 사용하는 컬러 모드를 확인할 수 있습니다
+- 기본 컴포넌트를 조합해서 새로운 컴포넌트를 쉽게 만들 수 있습니다
+
+#### CHakra UI 활용
+- 구글에서 Chakra UI를 검색하고 사이트에 접속합니다
+- Home 화면에서 Start Building 버튼을 클릭하고 Next.js를 선택합니다
+- App/chakra/page.js 파일을 생성합니다
+- 지시대로 설치합니다
+- Snippets를 설치함녀 src/components/ui 아래 추가 component가 설치됩니다
+- Layout에 provider를 설정합니다
+- tsconfig 설정을 확인해 봅니다
+- [CHakra UI 홈피](https://www.chakra-ui.com/)
+
+설치
+```
+npm i @chakra-ui/react @emotion/react
+```
+```
+npx @chakra-ui/cli snippet add
+```
+코드
+```
+import { Button } from "@/components/ui/button"
+import { HStack } from "@chakra-ui/react"
+import {
+    AccordionItem,
+    AccordionItemContent,
+    AccordionItemTrigger,
+    AccordionRoot,
+  } from "@/components/ui/accordion"
+
+export default function Chakra() {
+    return (
+        <>
+        <HStack>
+            <Button>Click me</Button>
+            <Button>Click me</Button>
+        </HStack>
+        <Stack gap="4">
+      <Text fontWeight="medium">Expanded: {value.join(", ")}</Text>
+      <AccordionRoot value={value} onValueChange={(e) => setValue(e.value)}>
+        {items.map((item, index) => (
+          <AccordionItem key={index} value={item.value}>
+            <AccordionItemTrigger>{item.title}</AccordionItemTrigger>
+            <AccordionItemContent>{item.text}</AccordionItemContent>
+          </AccordionItem>
+        ))}
+      </AccordionRoot>
+      </Stack>
+        </>
+    )
+}
+
+const items = [
+    { value: "first-item", title: "First Item", text: "Some value 1..." },
+    { value: "second-item", title: "Second Item", text: "Some value 2..." },
+    { value: "third-item", title: "Third Item", text: "Some value 3..." },
+  ]
+```
+
+<hr>
+
+### Tailwind CSS
+- 다른 프레임워크와는 다르게 **CSS 규칙만을 제공**합니다
+- 자바스크립트 모듈이나 리액트 컴포넌트를 제공하지 않기 때문에 필요한 경우 직접 만들어서 사용해야 합니다
+- 변수값을 조정하여 개성있는 디자인을 만들 수 있습니다. **디자인의 자유도가 높습니다**
+- dark mode 및 light mode를 쉽게 적용할 수 있습니다
+- 빌드 시점에 사용하지 않는 클래스는 제거 되기 때문에 높은 수준의 최적화를 지원합니다
+- CSS 클래스의 접두사를 활요해서 모바일, 데스크톱, 태블릿 화면에서 원하는 규칙을 지정할 수 있습니다.
+- Tailwind는 React 기준으로 하고 있어서 바로 코드를 사용하면 오류가 발생할 수 있습니다
+
+#### Tailwind CSS 활용
+- Text 코드는 tailwindcss.com에 나와 있는 것이 오류가 적습니다
+- [Tailwind CSS 홈피](https://tailwindcss.com/)
+
+
+코드
+```
+export default function Tailwind() {
+    return (
+        <>
+<div className="space-y-4">
+  <div className="w-96 bg-white shadow rounded">
+      w-96
+  </div>
+  <div className="w-80 bg-white shadow rounded">
+      w-80
+  </div>
+  <div className="w-72 bg-white shadow rounded">
+      w-72
+  </div>
+  <div className="w-64 bg-white shadow rounded">
+      w-64
+  </div>
+  <div className="w-60 bg-white shadow rounded">
+      w-60
+  </div>
+  <div className="w-56 bg-white shadow rounded">
+      w-56
+  </div>
+  <div className="w-52 bg-white shadow rounded">
+      w-52
+  </div>
+  <div className="w-48 bg-white shadow rounded">
+      w-48
+  </div>
+</div>
+        </>
+    )
+}
+```
+
+<hr>
+
+### Headless UI
+- TaliwindCSS를 만든 Tailwind Labs 팀의 무료 오픈소스 프로젝트 입니다
+- TailwindCSS는 웹 컴포넌트 안에서 사용할 수 있는 CSS클래스만 제공합니다
+- 따라서 모달이나 버튼 등 동적인 컴포넌트를 만들려면 직접 자바스크립트 코드를 작성해야 합니다
+- 이런 단점을 보완하기 위해서 Headless UI가 탄생했습니다
+
+#### Headless UI 활용
+- [Headless ui 홈피](https://headlessui.com/)
+
+설치
+```
+npm install @headlessui/react@latest
+```
+
+코드
+```
+import { Menu, MenuButton, MenuItem, MenuItems, Button } from '@headlessui/react'
+
+export default function Headless() {
+    return (
+        <Menu>
+        <MenuButton>My account</MenuButton>
+        <MenuItems anchor="bottom">
+          <MenuItem>
+            <a className="block data-[focus]:bg-blue-100" href="https://www.google.com/">
+              Settings
+            </a>
+          </MenuItem>
+          <MenuItem>
+            <a className="block data-[focus]:bg-blue-100" href="https://www.naver.com/">
+              Support
+            </a>
+          </MenuItem>
+          <MenuItem>
+            <a className="block data-[focus]:bg-blue-100" href="/license">
+              License
+            </a>
+          </MenuItem>
+        </MenuItems>
+        <Button className="rounded bg-sky-600 py-2 px-4 text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
+      Save changes
+        </Button>
+      </Menu>
+      
+    )
+}
+```
+<hr>
+
+### Project 생성
+- Tailwind 사용을 위해 프로젝트를 다시 생성합니다
+- 프로젝트를 다시 생성하지 않고 설정할 수도 있지만 과정이 다소 복잡합니다
+  - 교재에도 설정 방법이 다름
+- 15.0.2 버전이 릴리즈 되어 있으나 아직 Tailwind와의 호환성이 안정적이지 않습니다
+```
+npx create-next-app@14
+```
+
+
+
+
+
+<br><br><br><br><br><br>
+
 ## 11월 6일
 
 ### styled jsx

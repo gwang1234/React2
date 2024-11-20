@@ -2,6 +2,172 @@
 
 <br><br>
 
+## 11월 20일
+
+### Props 흐름의 이해
+- Next.js의 데이터 흐름은 `단방향`으로 이루어 집니다
+- 즉, parents에서 child component의 방향으로 props의 흐름이 이루어 집니다
+- 따라서 계층 구조가 복잡해 지면 `Props Driling` 문제가 발생합니다
+- Props Drilirng은 여러 개의 component를 지나 props 전달 되면서 발생하는 문제입니다
+
+<br>
+
+- Props Drilirng은 다음과 같은 문제를 발생 시킬 수 있습니다
+  - 1. 중간에 위치한 component에 불필요한 props를 전달해야 하는 문제
+  - 2. 타겟 component까지 props가 전달되지 않을 경유 원인 규명의 어려움
+  - 3. 필요 이상으로 코드가 복잡해지는 문제
+
+![Forest](context.jpg)
+
+<br>
+
+### Props 흐름
+
+```
+import ComponentA from "@/components/ComponentA"
+import ComponentC from "@/components/ComponentC"
+
+export default function PropsFlow() {
+    const data = {id: 1, name: 'woo', message: 'Hello World'}
+    
+    return (
+        <>
+          <h1>Props flow</h1>
+          <ComponentA foo={data}/>
+        </>
+    )
+}
+```
+```
+import ComponentB from "./ComponentB";
+import ComponentC from "./ComponentC";
+
+export default function ComponentA({foo}) {
+    return (
+        <>
+          <h1>ComponentA</h1>
+          <h2>{foo.id}</h2>
+          <ComponentB data={foo}/>
+        </>
+    )
+}
+```
+```
+import ComponentC from "./ComponentC";
+
+export default function ComponentB({data}) {
+    return (
+        <>
+          <h1>ComponentB</h1>
+          <h2>{data.name}</h2>
+          <ComponentC user={data}/>
+        </>
+    )
+}
+```
+```
+export default function ComponentC({user}) {
+    return (
+        <>
+          <h1>ComponentC</h1>
+          <h2>{user.message}</h2>
+        </>
+    )
+}
+```
+- Component A, B, C, props-flow 페이지 상호간에는 계층구조를 가지고 있지 않습니다
+- 아직 어느 쪽에서도 component 호출하지 않았기 때문입니다
+- 그러나 어느 쪽이든 component를 호출 하는 순간, **호출한 쪽은 parent**가 되고, **호출 받은 쪽은 child**가 됩니다.
+- 이 것은 component간, component와 page간 모두에 적용됩니다.
+- 관계가 한번 성립되면 **child가 parent를 호출할 수 없습니다**
+  - 예를 들어 A가 B를 호출한 경우, A는 parent, B는 child가 됩니다
+  - 이 관계는 아직 아무도 호출하지 않거나, 호출 받지 않은 C에게는 적용되지 않습니다
+  - 즉, C는 A, B 모두 호출 할 수 있게 됩니다. 이 경우 C가 parent, A와 B child가 됩니다
+  - A와 B의 관계, C와 A, B의 관계가 공존하게 됩니다
+  - A는 B만 호출 할 수 있고, C는 A, B 모두를 호출 할 수 있으며 그 반대는 불가능합니다.
+
+### Context API 개요
+- Context는 UX구축에 많이 사용되는 React의 기능입니다
+- React는 16.3 버전부터 정식적으로 context api를 지원하고 있습니다
+- 일반적으로 props는 부모에게 자식으로 전달되는 단방향 통신을 합니다
+- Context API는 특정 component가 props를 사용하지 않고, 하위 component를 포함한 **모든 component에 데이터를 공유**할 수 있는 기능을 제공합니다
+- 즉 **"전역"으로 데이터를 사용할 수 있게** 해줍니다
+
+### use client
+- Next.js에서 'use client'를 사용하는 이유는 **서버 컴포넌트와 클라이언트 컴포넌트를 구분하기 위해**서 입니다
+- Nsxt.js는 기본적으로 서버에서 렌더링하도록 설계되어, 클라이언트에서만 필요한 컴포넌트를 명시적으로 지정해야 할 필요가 있습니다.
+- 'use client'를 컴포넌트 상단에 선언하면 해당 컴포넌트는 **클라이언트에서만 렌더링**되며, 주로 상태관리나 브라우저 전용 API 사용이 필요한 경우에 사용됩니다.
+
+<br>
+
+```
+'use client'
+import { createContext, useState, useEffect } from "react"
+
+const ThemeContext = createContext();
+export const ThemeProvider = ({children}) => {
+    const [theme, setTheme] = useState('light')
+    const toggleTheme = () => {
+        setTheme((preTheme) => (preTheme === 'light' ? 'dark' : 'light'))
+    }
+    useEffect(() => {
+        document.body.className = theme
+    }, [theme])
+    return (
+        <ThemeContext.Provider value={{theme, toggleTheme}}>
+          {children}
+        </ThemeContext.Provider>
+    )
+}
+
+export default ThemeContext
+```
+<br>
+
+### Directory 구조
+- `app`: Routing Page 관리
+- `components`: 재사용 가능한 공통 컴포넌트 관리
+- `context`: context 컴포넌트 관리
+- `feature`: 기능별 컴포넌트 관리
+- `store`: Route store 설정 파일 관리
+- `styles`: CSS, Sass 등 스타일 파일 관리
+
+<br>
+
+[componets Directory]
+- 애플리케이션 전반에서 재사용될 수 있는 **공통 컴포넌트를 보관**합니다
+- 특정 기능에 종속되지 않으며, 다양한 페이지나 기능에서 **재사용할 수 있는** component를 모아 둡니다.
+
+<br>
+
+[features Directory]
+- **특정 기능이나 도메인** 별로 코드를 구성하는 데 사용합니다.
+- 사용자 인증 기능, 프로필 관리 기능 등 각 기능과 관련된 상태 관리, API 요청, 슬라이스, 컴포넌트 등을 보관합니다
+- **재 사용이 불가능하거나** 가능하더라도 **많은 수정을 해야** 하는 컴포넌트를 관리합니다.
+
+### Redux 주요 file의 역할
+- Slice는 Redux Toolkit에서 사용되는 용어로, 특정 기능과 관련된 상태와 reducer 함수의 모음을 나타냅니다
+- Slice라는 이름은 애플리케이션 상태의 한 부분을 의미합니다
+- Redux Toolkit의 createSlice 함수를 사용하면 특정 기능과 관련된 상태, 액션, reducer를 한곳에서 정의할 수 있어 관리하기가 용이합니다.
+
+[Redux Provider]
+- Redux Provider는 Redux의 상태 등을 공급하기 위한 파일입니다
+- Provider는 사용하고자 하는 page에서 사용하면 됩니다
+
+### Context API vs Redux
+[Context API]
+- Redux에서 기본으로 제공하는 상태 관리 도구로, 외부 라이브러리 설치 없이 사용 가능합니다
+- Context API는 주로 **전역 상태를 관리**하는데 사용됩니다
+- React.createContext()로 생성한 Context 객체와 Provider 컴포넌트를 사용해 상태를 하위 컴포넌트에 전달됩니다
+
+[Redux]
+- Redux는 전역 상태를 관리하기 위한 독립적인 state 관리 라이브러리 입니다
+- **상태의 변경을 예측** 가능하게 하고, **전역 state 관리를 더 구조적**으로 지원합니다
+- store, reducer, action 등의 개념을 사용해 state와 state dispatch를 관리합니다
+
+
+<br><br><br><br><br><br>
+
 ## 11월 13일
 
 ### UI 라이브러리

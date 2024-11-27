@@ -2,6 +2,94 @@
 
 <br><br>
 
+
+## 11월 27일
+
+### Redux
+
+[장점]
+
+- `명확한 상태 관리 구조`: 액션과 reducer를 통해 state dispatch 과정을 예측 가능하게 만들고, 코드의 가독성을 높입니다.
+- `미들웨어 지원`: redux-thunk, redux-saga와 같은 미들웨어를 사용해 비동기 로직을 쉽게 처리할 수 있습니다.
+- `디버깅 도구`: Redux DevTools를 통해 상태 변화 및 디버깅이 용이합니다
+
+[단점]
+
+- `설정과 코드 복잡도`: Context API에 비해 설정이 복잡하며, boileplate 코드가 많이 필요합니다
+- `추가 라이브러리 필요`: Redux 자체가 외부 라이브러리이므로 설치 및 유지 관리가 필요합니다
+- `작은 애플리케이션에는 과한 설정`: 단순한 상태 관리가 필요한 작은 애플리케이션에서는 과도한 설정일 수 있습니다.
+
+redux 설치
+```
+npm install @reduxjs/toolkit
+```
+
+Redux 코드 예시
+```
+import { createSlice } from "@reduxjs/toolkit"
+
+export const counterSlice = createSlice({
+    name: 'counter',
+    initialstate: {
+        Value: 0
+    },
+    reducers: {
+        increment: (state) => {
+            state.value += 1
+        },
+        decrement: (state) => {
+            state.value -= 1
+        }
+    }
+})
+
+export const {increment, decrement} = counterSlice.actions
+export default counterSlice.reducer
+```
+```
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from '@/features/counter/counterSlice';
+
+export const store = configureStore({
+    reducer: {
+        counter: counterReducer  
+    }
+});
+```
+```
+import { useSelector, useDispatch } from "react-redux";
+import { increment, decrement } from "./counterSlice";
+
+export function Counter() {
+    const count = useSelector((state) => state.counter.value)
+    const dispatch = useDispatch()
+
+    return (
+        <div>
+            <h1>{count}</h1>
+            <button onClick={() => {dispatch(increment())}}>증가</button>
+            <button onClick={() => {dispatch(decrement())}}>감소</button>
+        </div>
+    )
+}
+```
+```
+'use client'
+
+import { Provider } from "react-redux"
+import { store } from "./store"
+
+export default function CounterProvider({children}) {
+    return (
+        <Provider store={store}>
+            {children}
+        </Provider>
+    )
+}
+```
+
+<br><br><br><br><br><br>
+
 ## 11월 20일
 
 ### Props 흐름의 이해

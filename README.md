@@ -2,6 +2,87 @@
 
 <br><br>
 
+## 11월 29일
+
+### GitHub Pages 생성
+- 이 저장소는 기본적인 GitHub Page로 이 곳에 정적 페이지를 올리고 서비스 운영을 할 수 있습니다
+- 외부에서 \<ID\>.gihbug.io로 접속할 수 있습니다
+
+### 깃허브 연동
+
+깃허브 설정 추가 
+```
+git config --global init.defaultbranch main
+git config --local user.name gwang1234 
+git config --local user.email qoi11@naver.com
+```
+
+깃허브 주소 등록
+```
+git remote remove origin
+git remote add origin https://키이름@github.com/아이디/foo.git
+```
+
+주소등록 확인
+```
+git remote -v
+```
+깃 푸시
+```
+git push -u origin main
+```
+gh-pages 설치
+```
+npm i gh-pages
+```
+
+package.json 설정 변경
+```
+{
+  "homepage": "https://gwang1234.github.io/foo",
+  "name": "foo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out"
+  },
+
+```
+nextconfig.mjs 설정 변경
+```
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    output: 'export',
+    'distDir': 'out',
+};
+```
+이미지, css 적용
+```
+{
+    "deploy": "touch out/.nojekyll && gh-pages -d out -b deploy -t true"
+},
+```
+```
+const isProd = process.env.NODE_ENV === 'production';
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    output: 'export',
+    'distDir': 'out',
+    assetPrefix: isProd ? 'https://gwang1234.github.io/foo/' : undefined,
+    images: {
+        unoptimized: true,
+    },
+};
+```
+
+
+<br><br><br><br><br><br>
 
 ## 11월 27일
 
